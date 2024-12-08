@@ -1,6 +1,9 @@
-# Welcome to Remix + Vite!
+# Welcome to pokemon view transitions with instant client side navigation
 
-📖 See the [Remix docs](https://remix.run/docs) and the [Remix Vite docs](https://remix.run/docs/en/main/future/vite) for details on supported features.
+This repository is forked from https://github.com/AlemTuzlak/remix-view-transition-pokemon/compare/main...phlipsterit:remix-instant-view-transition-pokemon:main
+
+It adds instant client side navigation by feeding the client loader of the next route with data from the previous route
+Then more data is loaded after the navigation if needed with a useFetcher.
 
 ## Development
 
@@ -9,28 +12,3 @@ Run the Vite dev server:
 ```shellscript
 npm run dev
 ```
-
-## Deployment
-
-First, build your app for production:
-
-```sh
-npm run build
-```
-
-Then run the app in production mode:
-
-```sh
-npm start
-```
-
-Now you'll need to pick a host to deploy it to.
-
-### DIY
-
-If you're familiar with deploying Node applications, the built-in Remix app server is production-ready.
-
-Make sure to deploy the output of `npm run build`
-
-- `build/server`
-- `build/client`
