@@ -13,10 +13,16 @@ const LinkAndImageTransition = ({
   to,
   className,
   imgProps,
+  onClick,
   withTitle = false,
 }: LinkAndImageTransitionProps) => {
   return (
-    <Link to={to} className={className} unstable_viewTransition>
+    <Link
+      to={to}
+      onClick={onClick}
+      className={className}
+      unstable_viewTransition
+    >
       <ImageWithTransition to={to} {...imgProps} />
       {withTitle && (
         <h2 className="text-lg font-semibold">{imgProps.transitionName}</h2>

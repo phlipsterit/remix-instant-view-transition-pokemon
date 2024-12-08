@@ -57,7 +57,10 @@ export const fetchEvolutions = async () => {
 };
 
 // Function to get information about a Pokemon and its forms
-export const getPokemonInfo = async (pokemonName: string) => {
+export const getPokemonInfo = async (pokemonName: string, delay?: number, detailed?: boolean) => {
+  if(delay) {
+    await new Promise(resolve => setTimeout(resolve, delay));
+  }
   try {
     // Make a request to get information about the specified Pokemon
     const pokemonResponse = await fetch(
@@ -74,9 +77,9 @@ export const getPokemonInfo = async (pokemonName: string) => {
       name: pokemonData.name,
       url: pokemonData.url,
       image: getPokemonImage(pokemonData.id),
-      type: pokemonData.types.map((type: any) => type.type.name).join(", "),
       evolutions,
       id: pokemonData.id,
+      ...(detailed ? {type: pokemonData.types.map((type: any) => type.type.name).join(", "), height: pokemonData.height}: {}),
     };
   } catch (error) {
     console.error(`Error: ${(error as any).message}`);

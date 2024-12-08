@@ -1,5 +1,11 @@
 import { LoaderFunctionArgs, json, type MetaFunction } from "@remix-run/node";
-import { Outlet, useLoaderData, useLocation } from "@remix-run/react";
+import {
+  ClientLoaderFunctionArgs,
+  Outlet,
+  useLoaderData,
+  useLocation,
+} from "@remix-run/react";
+import { clientLoaderContext } from "~/clientLoaderContext";
 import { LinkAndImageTransition } from "~/components/LinkAndImageTransition";
 import { getPokemonInfo } from "~/pokemon";
 
@@ -11,9 +17,22 @@ export const meta: MetaFunction = () => {
 };
 
 export const loader = async ({ params }: LoaderFunctionArgs) => {
-  const pokemon = await getPokemonInfo(params.pokemon!);
+  const pokemon = await getPokemonInfo(params.pokemon!, 500);
 
   return json({ pokemon });
+};
+
+export const clientLoader = async ({
+  serverLoader,
+  params,
+}: ClientLoaderFunctionArgs) => {
+  const key = `pokemon_info_${params.pokemon!}`;
+  const pokemonInfo = clientLoaderContext.get(key);
+  if (pokemonInfo) {
+    clientLoaderContext.remove(key);
+    return { pokemon: pokemonInfo };
+  }
+  return await serverLoader();
 };
 
 export default function Index() {
@@ -40,6 +59,21 @@ export default function Index() {
             <LinkAndImageTransition
               key={evolution.name}
               to={transitionTo}
+              onClick={() => {
+                clientLoaderContext.set(`pokemon_info_${evolution.name}`, {
+                  name: evolution.name,
+                  image: evolution.image,
+                  evolutions,
+                });
+                clientLoaderContext.set(
+                  `pokemon_info_detailed_${evolution.name}`,
+                  {
+                    name: evolution.name,
+                    image: evolution.image,
+                    evolutions,
+                  }
+                );
+              }}
               imgProps={{
                 src: evolution.image,
                 transitionName: evolution.name,

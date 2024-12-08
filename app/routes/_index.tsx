@@ -1,7 +1,12 @@
 import type { MetaFunction } from "@remix-run/node";
 import { json, useLoaderData } from "@remix-run/react";
+import { clientLoaderContext } from "~/clientLoaderContext";
 import { LinkAndImageTransition } from "~/components/LinkAndImageTransition";
-import { PokemonEvolutionChains, fetchEvolutions } from "~/pokemon";
+import {
+  PokemonEvolutionChains,
+  fetchEvolutions,
+  getPokemonInfo,
+} from "~/pokemon";
 
 export const meta: MetaFunction = () => {
   return [
@@ -36,6 +41,14 @@ export default function Index() {
               <LinkAndImageTransition
                 withTitle
                 key={pokemon.name}
+                onClick={() =>
+                  clientLoaderContext.set(`pokemon_info_${pokemon.name}`, {
+                    name: pokemon.name,
+                    evolutions,
+                    image: pokemon.image,
+                    url: pokemon.url,
+                  })
+                }
                 to={`/pokemon/${pokemon.name}`}
                 className="size-80 flex items-center justify-center flex-col gap-2 p-2"
                 imgProps={{
